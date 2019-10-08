@@ -1,0 +1,47 @@
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Editor Files #
+################
+*~
+*.swp
+
+# Gradle Files #
+################
+.gradle
+# Build output directies
+target/
+build/
+# IntelliJ specific files/directories and other
+out
+.idea
+bin/
+/.nb-gradle/profiles/private/
+/.nb-gradle/private/
+test-output/
+src/test
