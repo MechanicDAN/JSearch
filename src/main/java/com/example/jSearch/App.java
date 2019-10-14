@@ -1,12 +1,16 @@
-package com.example;
+package com.example.jSearch;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class App{
+import java.io.IOException;
 
-    public static void main(String[] args) {
+
+@SpringBootApplication
+public class App {
+
+    public static void main(String[] args) throws IOException {
         SpringApplication.run(App.class, args);
     }
 

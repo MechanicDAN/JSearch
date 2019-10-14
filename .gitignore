@@ -44,4 +44,4 @@ bin/
 /.nb-gradle/profiles/private/
 /.nb-gradle/private/
 test-output/
-src/test
+files

@@ -1,19 +1,21 @@
-package com.example.controllers;
+package com.example.jSearch.controllers;
 
-import com.example.forms.SearchingForm;
+import com.example.jSearch.forms.SearchingForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
+@RequestMapping(value = "/")
 public class MainPageController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("searchingform", new SearchingForm());
+
         return "index";
     }
-
 }

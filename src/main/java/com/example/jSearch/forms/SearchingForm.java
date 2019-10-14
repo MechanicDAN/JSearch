@@ -1,4 +1,4 @@
-package com.example.forms;
+package com.example.jSearch.forms;
 
 public class SearchingForm {
 

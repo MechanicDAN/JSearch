@@ -5,25 +5,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="libs/css/font-awesome.min.css"
+          th:href="@{libs/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="css/index.css" th:href="@{css/index.css}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 </head>
-<body style="background-color: mintcream">
+<body>
+
+
 <div class="container-fluid text-dark">
-    <div class="col-7 justify-content-center" style="position: absolute; left: 25%; top: 40%; right: 25%;">
-        <form action="#" class="form-inline " th:action="@{/}" th:object="${searchingform}" method="post">
-            <input class="form-control w-75 p-3 "
-                   style="border-color: lightslategrey;border-bottom-right-radius: 0; border-top-right-radius: 0; "
-                   placeholder="" type="text"
-                   th:field="*{searchRequest}"/>
-            <input type="submit" class="btn btn-outline-success"
-                   style="border-top-left-radius: 0;border-bottom-left-radius: 0; "
-                   value="Go!"/>
-        </form>
-    </div>
+        <img class="rounded mx-auto d-block" th:src="@{image/logo_transparent.png}" width="300px" height="300px">
+
+    <form class="form-inline " th:action="@{/}" th:object="${searchingform}" method="post">
+        <input placeholder="" type="text" th:field="*{searchRequest}"/>
+        <button type="submit"></button>
+    </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
