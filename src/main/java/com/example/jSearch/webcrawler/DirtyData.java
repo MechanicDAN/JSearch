@@ -3,12 +3,12 @@ package com.example.jSearch.webcrawler;
 public class DirtyData {
     public String url;
     public String title;
-    public String text;
+    public String[] words;
 
-    public DirtyData(String _url, String _title, String _text) {
+    public DirtyData(String _url, String _title, String[] _words) {
         url = _url;
         title = _title;
-        text = _text;
+        words = _words;
     }
 
 
@@ -16,6 +16,6 @@ public class DirtyData {
     public String toString() {
         return "url: " + url + "\n" +
                 "title: " + title + "\n" +
-                "text: " + text;
+                "text: " + words;
     }
 }

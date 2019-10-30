@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 public class ThreadCrawler implements Runnable {
-    private final int MAX_DEPTH = 2;
+    private final int MAX_DEPTH = 3;
     private final String theURL;
     private final Executor executor;
     private final String parentURL;
@@ -49,7 +49,7 @@ public class ThreadCrawler implements Runnable {
             int statusCode = response.statusCode();
             if (statusCode == 200) {
                 Document doc = Jsoup.connect(theURL).get();
-                saveToFile(doc, theURL);
+                saveToFile(doc);
                 links.addAll(doc.select("a[href]")
                         .stream()
                         .map(link -> fixURL(link.attr("href")))
@@ -62,18 +62,16 @@ public class ThreadCrawler implements Runnable {
         return links;
     }
 
-    private void saveToFile(Document doc, String url) {
-        DirtyData dirtyData = new DirtyData(url, doc.title(), doc.text());
-        Gson gson = new Gson();
-        byte[] textBytes = gson.toJson(dirtyData).getBytes();
+    private void saveToFile(Document doc) {
+        byte[] textBytes = doc.text().getBytes();
         try (OutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(
-                Paths.get("files\\" +
-                        doc.title().replaceAll("\\W+", "") + ".json")))) {
+                Paths.get("pages\\" +
+                        doc.title().replaceAll("\\W+", "") + ".txt")))) {
             for (byte eachBytes : textBytes) {
                 outputStream.write(eachBytes);
             }
         } catch (IOException ioe) {
-            System.err.println("IO Exception: " + doc.title());
+            System.err.println(ioe.getMessage());
         }
     }
 
@@ -107,13 +105,12 @@ public class ThreadCrawler implements Runnable {
                     if (newUrl.contains(parentURL)) {
                         crawler.markAsSeen(newUrl);
                         executor.execute(new ThreadCrawler(level + 1, newUrl, parentURL, executor, crawler));
-                    } else {
-                        crawler.addToMainQueue(newUrl);
                     }
+//                    } else {
+//                        crawler.addToMainQueue(newUrl);
+//                    }
                 }
             }
         }
     }
-
-
 }

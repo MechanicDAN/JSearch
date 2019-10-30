@@ -12,10 +12,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-
-
+@Component
 public class Crawler implements CommandLineRunner {
-    private boolean stopFlag = false;
+    boolean stopFlag = false;
     private Set<String> seenURLs = new HashSet<>();
     private BlockingQueue<String> mainQueue = new PriorityBlockingQueue<>();
     private ExecutorService threadPool = Executors.newWorkStealingPool(18);
@@ -24,11 +23,15 @@ public class Crawler implements CommandLineRunner {
     private LinkService linkService;
 
     private void initQueue() {
-
-        mainQueue.addAll(linkService.getAll().stream()
-                .map(Link::getURL)
-                .collect(Collectors.toList()));
+        try {
+            mainQueue.addAll(linkService.getAll().stream()
+                    .map(Link::getURL)
+                    .collect(Collectors.toList()));
+        } catch (NullPointerException e) {
+            System.err.println("Cannot init queue");
+        }
     }
+
 
     /**
      * Callback used to run the bean.
@@ -44,6 +47,7 @@ public class Crawler implements CommandLineRunner {
                 seenURLs.add(url);
                 threadPool.submit(new ThreadCrawler(0, url, url, threadPool, this));
             }
+            shutdownAndAwaitTermination(threadPool);
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
             shutdownAndAwaitTermination(threadPool);
@@ -62,6 +66,7 @@ public class Crawler implements CommandLineRunner {
     synchronized void addToMainQueue(String url) {
         mainQueue.add(url);
     }
+
 
     private void shutdownAndAwaitTermination(ExecutorService pool) {
         pool.shutdown();
