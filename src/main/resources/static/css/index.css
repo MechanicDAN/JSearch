@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * {
     box-sizing: border-box;
 }
@@ -37,3 +38,44 @@ button:before {
     font-size: 16px;
     color: dodgerblue;
 }
+=======
+* {
+    box-sizing: border-box;
+}
+
+form {
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid grey;
+    z-index: 1;
+}
+
+input, button {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+input {
+    width: 100%;
+    height: 42px;
+    padding-left: 15px;
+}
+
+button {
+    height: 42px;
+    width: 42px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+button:before {
+    content: "\f002 ";
+    font-family: FontAwesome;
+    font-size: 16px;
+    color: dodgerblue;
+}
+>>>>>>> cbd800ef2f8029caa07b200c90a226365dfa3abc
