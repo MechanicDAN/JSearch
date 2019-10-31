@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 target
 .log
 .idea
@@ -52,4 +52,6 @@ bin/
 /.nb-gradle/private/
 test-output/
 files
->>>>>>> cbd800ef2f8029caa07b200c90a226365dfa3abc
+models
+pages
+
