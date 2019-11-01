@@ -3,7 +3,6 @@ package com.example.jSearch.webcrawler;
 
 import com.example.jSearch.entity.Link;
 import com.example.jSearch.service.LinkService;
-import com.example.jSearch.webcrawler.ThreadCrawler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

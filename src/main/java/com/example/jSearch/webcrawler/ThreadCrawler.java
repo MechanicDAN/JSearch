@@ -2,7 +2,6 @@
 package com.example.jSearch.webcrawler;
 
 import com.google.gson.Gson;
-import org.apache.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -27,7 +26,6 @@ public class ThreadCrawler implements Runnable {
     private Crawler crawler;
     private int level;
     private Gson gson = new Gson();
-    private Logger log = Logger.getLogger(ThreadCrawler.class);
 
 
 
@@ -70,7 +68,7 @@ public class ThreadCrawler implements Runnable {
     }
 
     private void saveToFile(org.jsoup.nodes.Document doc) {
-        byte[] textBytes = gson.toJson(new Document(theURL, doc.title(), doc.text())).getBytes();
+        byte[] textBytes = gson.toJson(new Document(theURL, doc.title(), doc.body().text())).getBytes();
         try (OutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(
                 Paths.get("pages\\" +
                         doc.title().replaceAll("\\W+", "") + ".json")))) {
@@ -78,7 +76,7 @@ public class ThreadCrawler implements Runnable {
                 outputStream.write(eachBytes);
             }
         } catch (IOException ioe) {
-            log.warn(ioe.getMessage());
+            System.out.println(ioe.getMessage());
         }
     }
 
