@@ -12,7 +12,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-@Component
+
+
 public class Crawler implements CommandLineRunner {
     boolean stopFlag = false;
     private Set<String> seenURLs = new HashSet<>();
