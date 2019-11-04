@@ -46,7 +46,6 @@ target/
 build/
 # IntelliJ specific files/directories and other
 out
-.idea
 bin/
 /.nb-gradle/profiles/private/
 /.nb-gradle/private/

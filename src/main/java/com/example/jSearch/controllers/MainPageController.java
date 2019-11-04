@@ -22,8 +22,9 @@ public class MainPageController {
     }
 
     @GetMapping(value = "/search")
+    @ResponseBody
     public String getResponse(@RequestParam String q, Model model){
-        return "Query: " + q;
+        return "Query: " + "<a href=\"https://en.wikipedia.org/wiki/Main_Page\">wiki</a>";
     }
 
 }

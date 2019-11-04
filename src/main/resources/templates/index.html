@@ -19,7 +19,7 @@
 <div class="container-fluid text-dark">
         <img class="rounded mx-auto d-block" th:src="@{image/logo_transparent.png}" width="300px" height="300px">
 
-    <form class="form-inline " th:action="@{/}" th:object="${searchingform}" method="post">
+    <form autocomplete="off" class="form-inline " th:action="@{/}" th:object="${searchingform}" method="post">
         <input placeholder="" type="text" th:field="*{searchRequest}"/>
         <button type="submit"></button>
     </form>
