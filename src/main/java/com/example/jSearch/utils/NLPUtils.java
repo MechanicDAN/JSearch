@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class NLPUtils {
+    private static Word2Vec word2Vec;
     private static StanfordCoreNLP pipeline;
     private static Set<String> stopwords = new HashSet<>(Arrays.asList("i", "me", "my", "myself", "we", "our", "ours",
             "ourselves", "you", "your", "yours", "yourself", "yourselves",
@@ -31,10 +32,17 @@ public class NLPUtils {
             "t", "can", "will", "just", "don", "should", "ll", "now"));
 
     static {
+        //word2Vec = WordVectorSerializer.readWord2VecModel(new File("models/word2vecmodel.txt"));
+
         Properties props;
         props = new Properties();
         props.put("annotators", "tokenize, ssplit, pos, lemma");
+
         pipeline = new StanfordCoreNLP(props);
+    }
+
+    public static Word2Vec getWord2Vec() {
+        return word2Vec;
     }
 
     public static List<String> lemmatize(String input) {
@@ -52,7 +60,7 @@ public class NLPUtils {
             }
         }
         return lemmas.stream()
-                .filter(el -> !stopwords.contains(el) && !el.isEmpty() && !el.matches("[,:(){}\\[\\]`~^\\-#%=*+@;/?$'a-z]"))
+                .filter(el -> !stopwords.contains(el) && !el.isEmpty() && !el.matches("[,?$'a-z]"))
                 .collect(Collectors.toList());
     }
 

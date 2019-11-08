@@ -1,7 +1,5 @@
 package com.example.jSearch.utils;
 
-import com.example.jSearch.webcrawler.Document;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,10 +12,10 @@ public class TFIDF {
                 .count());
     }
 
-    public static double computeIDF(String word, List<Document> docs) {
+    public static double computeIDF(String word, List<String> docs) {
         int counter = 0;
-        for (Document doc : docs) {
-            if (doc.getBody().contains(word)) counter++;
+        for (String doc : docs) {
+            if (doc.contains(word)) counter++;
         }
         int numOfDocs = docs.size();
         return Math.log((numOfDocs - counter + 0.5) / (counter + 0.5));

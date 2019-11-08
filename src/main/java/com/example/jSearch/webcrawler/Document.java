@@ -1,6 +1,8 @@
 package com.example.jSearch.webcrawler;
 
-public class Document {
+import java.io.Serializable;
+
+public class Document implements Serializable {
     private String title;
     private String url;
     private String body;
@@ -24,7 +26,7 @@ public class Document {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
+    public void setBody(String body) {this.body = body;}
+
+    public void setTitle(String title) {this.title = title;}
 }
