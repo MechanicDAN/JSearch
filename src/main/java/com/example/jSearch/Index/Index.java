@@ -1,18 +1,14 @@
 package com.example.jSearch.Index;
 
-import com.google.gson.JsonParser;
-
-import javax.json.JsonObject;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import com.example.jSearch.webcrawler.Page;
+import java.util.ArrayList;
 
 public class Index {
-    private static JsonObject Index;
+    private ArrayList<PageWithId> index;
 
-    public Index(String path) throws FileNotFoundException {
-        FileReader reader = new FileReader(path);
-        JsonParser parser = new JsonParser();
-        Index = (JsonObject) parser.parse(reader);
+    public Index(ArrayList<PageWithId> index){
+        this.index = index;
     }
-    public static JsonObject getIndex(){return Index;}
+
+    public ArrayList<PageWithId> getIndex(){return index;}
 }
