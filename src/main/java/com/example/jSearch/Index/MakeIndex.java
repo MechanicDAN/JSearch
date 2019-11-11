@@ -15,10 +15,14 @@ import java.util.*;
 
 public class MakeIndex {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static HashMap<String, HashSet<PageWithId>> wordsInBody = new HashMap<>();
-    private static int id = 0;
+    private static HashMap<String, ArrayList<String>> index = new HashMap<>();
+    static MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017));
+    static MongoDatabase db = mongoClient.getDatabase( "Jsearch" );
+    static MongoCollection indexCollection = db.getCollection("Index");
+    static MongoCollection pagesCollection = db.getCollection("Pages");
 
     public static void Make() throws FileNotFoundException {
+        db.drop();
         String path = "C:/Users/Dan/IdeaProjects/gson/pages/";
         File folder = new File(path);
         for (File file : folder.listFiles()) {
@@ -30,36 +34,42 @@ public class MakeIndex {
                 System.out.println(file.getPath());
             }
         }
-        SaveToMOngo();
+        for(String key : index.keySet()){
+            Document doc = new Document();
+            IndexElement indexELToJson = new IndexElement(index.get(key));
+            String json = GSON.toJson(indexELToJson);
+            doc.put("key",key);
+            doc.put("value",json);
+            indexCollection.insertOne(doc);
+        }
     }
 
     static void AddPageInMap(Page page) {
         List<String> normalWordsOfBody = NLPUtils.lemmatize(page.getBody()+ " " + page.getTitle());
         page.setBody(String.join(" ", normalWordsOfBody));
-        PageWithId pageWithId = new PageWithId(id,page);
-        id++;
-        for (String wordsOfBody : normalWordsOfBody) {
-            if (!wordsInBody.containsKey(wordsOfBody)) {
-                wordsInBody.put(wordsOfBody, new HashSet<>(Collections.singletonList(pageWithId)));
-            } else {
-                wordsInBody.get(wordsOfBody).add(pageWithId);
-            }
+        ArrayList<String> addWords = new ArrayList<>();
+       SavePageToMOngo(page);
+        for (String word : normalWordsOfBody) {
+            if (!index.containsKey(word)) {
+                index.put(word, new ArrayList<String>(Collections.singletonList(page.getUrl())));
+                addWords.add(word);
+            } else
+                if(!addWords.contains(word)) {
+                    ArrayList arrayList = index.get(word);
+                    arrayList.add(page.getUrl());
+                    index.put(word, arrayList);
+                    addWords.add(word);
+                }
         }
     }
 
-    static void SaveToMOngo(){
-        MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017));
-        MongoDatabase db = mongoClient.getDatabase( "Jsearch" );
-        MongoCollection collection = db.getCollection("Index");
-
-        for (Map.Entry<String, HashSet<PageWithId>> element :wordsInBody.entrySet()){
-            Index index = new Index(new ArrayList<PageWithId>(element.getValue()));
+    static void SavePageToMOngo(Page page){
             Document doc = new Document();
-            String json = GSON.toJson(index);
-            doc.put("word",element.getKey());
+            String json = GSON.toJson(page);
+            String url = page.getUrl();
+            doc.put("key",url);
             doc.put("value",json);
-            collection.insertOne(doc);
+            pagesCollection.insertOne(doc);
         }
-    }
 }
 
