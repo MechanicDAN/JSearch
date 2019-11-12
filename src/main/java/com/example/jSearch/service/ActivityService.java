@@ -18,15 +18,6 @@ public class ActivityService {
     }
 
     public Activity save(Activity activity) {
-        if (activity.getId() == null) {
-            Activity firstActivity = this.findFirst();
-            if (firstActivity != null) {
-                long total = firstActivity.getTotalVisitors();
-                activity.setTotalVisitors(++total);
-                firstActivity.setTotalVisitors(total);
-                this.activityRepo.save(firstActivity);
-            }
-        }
         return this.activityRepo.save(activity);
     }
 
@@ -34,9 +25,12 @@ public class ActivityService {
         return this.activityRepo.findFirstBy();
     }
 
-
     public List<Activity> findAll() {
         return this.activityRepo.findAll();
+    }
+
+    public Activity findByParameter(String parameter){
+        return activityRepo.findActivityByParameters(parameter);
     }
 
     public void delete(Long id) {

@@ -1,14 +1,14 @@
 package com.example.jSearch.ranking.concreterankers;
 
-import com.example.jSearch.ranking.AbstractRanker;
-import com.example.jSearch.utils.NLPUtils;
+import com.example.jSearch.ranking.Ranker;
+import com.example.jSearch.ranking.nlpmodels.WordVecModel;
 import com.example.jSearch.utils.TFIDF;
+import com.example.jSearch.webcrawler.Page;
 import org.deeplearning4j.models.word2vec.Word2Vec;
-import java.util.*;
-import java.util.stream.Collectors;
 
-public class SemanticSimilarity implements AbstractRanker {
-    private Word2Vec word2Vec = NLPUtils.getWord2Vec();
+
+public class SemanticSimilarity implements Ranker {
+    private final Word2Vec word2Vec = WordVecModel.loadModel();
 
     private double[] convertDoc2Vec(String doc) {
         double[] resultVec = new double[200];
@@ -50,18 +50,9 @@ public class SemanticSimilarity implements AbstractRanker {
     }
 
     @Override
-    public List<String> doPageRanking(String query, List<String> docs) {
-        Map<Double, String> rankedPages = new HashMap<>();
+    public double doPageRanking(String query, Page doc) {
         double[] queryVec = convertDoc2Vec(query);
-        for (String doc : docs) {
-            double[] docVec = convertDoc2Vec(doc);
-            double cosSim = cosineSimilarity(queryVec, docVec);
-            rankedPages.put(cosSim, doc);
-        }
-        return rankedPages.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        double[] docVec = convertDoc2Vec(doc.getBody());
+        return cosineSimilarity(queryVec, docVec);
     }
 }

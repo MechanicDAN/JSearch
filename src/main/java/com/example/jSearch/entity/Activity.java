@@ -4,24 +4,17 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "activity")
+@Table(name = "activity",
+        indexes = {@Index(name = "param_index", columnList = "parameters")})
 public class Activity extends BaseEntity {
 
     private String userAgent;
     private String ip;
+    private String links;
     private String expires;
-    private Long totalVisitors;
-
+    private String parameters;
     private String requestMethod;
     private String url;
-
-    public Long getTotalVisitors() {
-        return totalVisitors;
-    }
-
-    public void setTotalVisitors(Long totalVisitors) {
-        this.totalVisitors = totalVisitors;
-    }
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
@@ -29,6 +22,10 @@ public class Activity extends BaseEntity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setLinks(String links) {
+        this.links = links;
     }
 
     public void setExpires(String expires) {
@@ -41,6 +38,14 @@ public class Activity extends BaseEntity {
 
     public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
+
+    public String getParameters() {
+        return parameters;
     }
 
     public String getUrl() {
@@ -63,5 +68,7 @@ public class Activity extends BaseEntity {
         return userAgent;
     }
 
-
+    public String getLinks() {
+        return links;
+    }
 }

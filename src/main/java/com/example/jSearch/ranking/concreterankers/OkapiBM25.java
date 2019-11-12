@@ -1,54 +1,42 @@
 package com.example.jSearch.ranking.concreterankers;
 
-import com.example.jSearch.ranking.AbstractRanker;
+import com.example.jSearch.ranking.Ranker;
+import com.example.jSearch.webcrawler.Page;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.example.jSearch.utils.TFIDF.computeIDF;
 import static com.example.jSearch.utils.TFIDF.computeTF;
 
-public class OkapiBM25 implements AbstractRanker {
+public class OkapiBM25 implements Ranker {
 
     private static final double k1 = 1.2;
     private static final double b = 0.75;
-    private List<String> documents;
-    private int numOfDocs;
+    private List<Page> pages;
 
-
+    public void setPages(List<Page> docs){
+        this.pages = docs;
+    }
 
     private double computeAvrdl() {
         long lenOfWholeDocs = 0;
-        for (String doc : documents) {
-            lenOfWholeDocs += doc.length();
+        for (Page doc : pages) {
+            lenOfWholeDocs += doc.getBody().length();
         }
-        return (double) lenOfWholeDocs / numOfDocs;
+        return (double) lenOfWholeDocs / pages.size();
     }
 
     @Override
-    public List<String> doPageRanking(String query, List<String> docs) {
-        this.documents = docs;
+    public double doPageRanking(String query,  Page doc) {
         double avrdl = computeAvrdl();
-        this.numOfDocs = documents.size();
-
-        Map<Double, String> result = new HashMap<>();
-        for (String doc : documents) {
-            double score = 0.0;
-            for (String word : query.split(" ")) {
-                double tf = computeTF(word, doc);
-                double idf = computeIDF(word, documents);
-                score += idf * (tf * (k1 + 1)) / tf + k1 * (1 - b + b * doc.length() / avrdl);
-                result.put(score, doc);
-            }
+        double score = 0.0;
+        for (String word : query.split(" ")) {
+            double tf = computeTF(word, doc.getBody());
+            double idf = computeIDF(word, pages);
+            score += idf * (tf * (k1 + 1)) / tf + k1 * (1 - b + b * doc.getBody().length() / avrdl);
         }
 
-        return result.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        return score;
     }
 }

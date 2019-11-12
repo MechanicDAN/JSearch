@@ -4,11 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "links")
-public class Link {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+public class Link extends BaseEntity {
 
     @Basic
     @Column(name = "url")
@@ -17,14 +13,6 @@ public class Link {
     @Basic
     @Column(name = "title")
     private String title;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -41,4 +29,5 @@ public class Link {
     public void setTitle(String title) {
         this.title = title;
     }
+
 }

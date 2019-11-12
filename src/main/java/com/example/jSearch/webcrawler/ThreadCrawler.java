@@ -13,27 +13,27 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
 
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 
-public class ThreadCrawler implements Runnable {
+public class ThreadCrawler implements Callable<Void> {
     private final int MAX_DEPTH = 3;
     private final String theURL;
-    private final Executor executor;
+    private final ExecutorService executor;
     private final String parentURL;
     private Crawler crawler;
     private int level;
     private Gson gson = new Gson();
 
 
-
     public ThreadCrawler(
             int level,
             String url,
             String parentURL,
-            Executor executor,
+            ExecutorService executor,
             Crawler crawler) {
         this.level = level;
         this.theURL = url;
@@ -68,7 +68,7 @@ public class ThreadCrawler implements Runnable {
     }
 
     private void saveToFile(org.jsoup.nodes.Document doc) {
-        byte[] textBytes = gson.toJson(new Document(theURL, doc.title(), doc.body().text())).getBytes();
+        byte[] textBytes = gson.toJson(new Page(theURL, doc.title(), doc.body().text())).getBytes();
         try (OutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(
                 Paths.get("pages\\" +
                         doc.title().replaceAll("\\W+", "") + ".json")))) {
@@ -101,20 +101,28 @@ public class ThreadCrawler implements Runnable {
 
 
     @Override
-    public void run() {
-        List<String> newUrls = processPage();
+    public Void call() {
         if (level < MAX_DEPTH) {
+            System.out.println("Thread[ " + Thread.currentThread().getName() + " ] process URL[" + theURL + "]");
+            List<String> newUrls = processPage();
+            List<ThreadCrawler> tasks = new ArrayList<>();
             for (String newUrl : newUrls) {
                 if (!crawler.isVisited(newUrl)) {
                     if (newUrl.contains(parentURL)) {
                         crawler.markAsSeen(newUrl);
-                        executor.execute(new ThreadCrawler(level + 1, newUrl, parentURL, executor, crawler));
+                        tasks.add(new ThreadCrawler(level + 1, newUrl, parentURL, executor, crawler));
                     }
-//                    } else {
-//                        crawler.addToMainQueue(newUrl);
-//                    }
                 }
+                if (Thread.currentThread().isInterrupted()) return null;
+            }
+            try {
+                executor.invokeAll(tasks);
+            } catch (InterruptedException e) {
+                System.err.println(e.getMessage());
+                crawler.shutdownAndAwaitTermination();
             }
         }
+        return null;
     }
 }
+
