@@ -65,9 +65,5 @@ public class LinkOfWord {
         }
         return output;
     }
-     static boolean lamda (String x,ArrayList<String> arrayList){
-        for(String str:arrayList)
-            if(x.equalsIgnoreCase(str)) return false;
-        return true;
-     }
+
 }
